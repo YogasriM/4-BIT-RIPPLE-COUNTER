@@ -32,9 +32,68 @@ In timing diagram Q0 is changing as soon as the negative edge of clock pulse is 
 
  Developed by: RegisterNumber:
 */
+module RippleCounter(
+   input wire clk,  // Clock input
+   output reg [3:0] count // 4-bit counter output
+);
 
+// Counter logic
+always @(posedge clk) begin
+   if (count == 4'b1111) // Reset when count reaches 15
+       count <= 4'b0000;
+   else
+       count <= count + 1; // Increment count
+end
+
+endmodule
+
+// Testbench
+module RippleCounter_tb;
+
+// Inputs
+reg clk;
+
+// Outputs
+wire [3:0] count;
+
+// Instantiate the counter
+RippleCounter uut(
+   .clk(clk),
+   .count(count)
+);
+
+// Clock generation
+initial begin
+   clk = 0;
+   forever #5 clk = ~clk; // Toggle clock every 5 time units
+end
+
+// Stimulus
+initial begin
+   // Wait for a few clock cycles
+   #10;
+   
+   // Display header
+   $display("Time | Count");
+   $display("-----------------");
+   
+   // Functional table testing
+   // Increment count 16 times and display the count
+   repeat (16) begin
+       #5; // Wait for one clock cycle
+       $display("%4d | %b", $time, count);
+   end
+   
+   // End simulation
+   $finish;
+end
+
+endmodule
 **RTL LOGIC FOR 4 Bit Ripple Counter**
+![Screenshot 2024-12-12 081330](https://github.com/user-attachments/assets/c5f26c2d-d6da-4922-bea3-767e209670e7)
 
 **TIMING DIGRAMS FOR 4 Bit Ripple Counter**
+![Screenshot 2024-12-12 081445](https://github.com/user-attachments/assets/6be5a371-d29e-4de2-91e6-b9f08ba52b0f)
 
 **RESULTS**
+Thus the program executed succesfully.
